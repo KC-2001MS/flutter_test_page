@@ -41,6 +41,9 @@ Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・rema
 - 画面全体を canvas に描くため、Lighthouse では LCP を測定できません（NO_LCP）。
   起動までの間は `web/index.html` の読み込み中の表示（HTML）を出し、起動後に `web/flutter_bootstrap.js` で消しています。
 - Flutter の Service Worker は非推奨のため、`web/flutter_bootstrap.js` で登録しないようにしています。
+- URL は `#` の付かないパス形式（`usePathUrlStrategy()`）です。GitHub Pages には存在しないパスを index.html に振り向ける設定がないため、
+  ビルド後に `tool/generate_route_pages.dart` でページごとの `index.html` と `404.html` を配置しています。
+  以前の `#/product` 形式の URL は、`web/index.html` で `/flutter_test_page/product` に置き換えます。
 
 ## 開発
 
@@ -48,4 +51,9 @@ Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・rema
 flutter pub get
 flutter run -d chrome
 flutter test
+
+# 公開用のビルド（GitHub Actions と同じ手順）
+dart run tool/fetch_prices.dart
+flutter build web --base-href /flutter_test_page/ --source-maps
+dart run tool/generate_route_pages.dart
 ```

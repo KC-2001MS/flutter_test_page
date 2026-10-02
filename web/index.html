@@ -49,6 +49,13 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="icon" href="favicon.ico"/>
   <link rel="manifest" href="manifest.json">
+  <!-- 以前の "#/product" 形式のURLは、"#" のないURL（/flutter_test_page/product）に置き換える -->
+  <script>
+    if (location.hash.startsWith("#/")) {
+      const base = document.baseURI.replace(/\/$/, "");
+      history.replaceState(null, "", base + location.hash.slice(1));
+    }
+  </script>
   <!-- Flutterが起動するまでの読み込み中の表示（起動後に flutter_bootstrap.js で消す） -->
   <style>
     body {

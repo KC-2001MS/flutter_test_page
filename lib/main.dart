@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 
 import 'screens/content_screens.dart';
@@ -7,6 +8,8 @@ import 'screens/product_list_screen.dart';
 import 'site/site_theme.dart';
 
 void main() {
+  // URLに "#" を付けない（/flutter_test_page/product の形にする）
+  usePathUrlStrategy();
   runApp(const MyApp());
 }
 
@@ -17,6 +20,16 @@ Page<void> _page(GoRouterState state, Widget child) =>
 String _slug(GoRouterState state) => state.pathParameters['slug']!;
 
 final router = GoRouter(
+  // GitHub Pagesはディレクトリへのアクセス時に末尾に "/" を付けるため、取り除いてから照合する
+  redirect: (context, state) {
+    final path = state.uri.path;
+    if (path.length > 1 && path.endsWith('/')) {
+      return state.uri
+          .replace(path: path.replaceFirst(RegExp(r'/+$'), ''))
+          .toString();
+    }
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',

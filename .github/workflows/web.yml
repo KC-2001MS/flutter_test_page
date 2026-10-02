@@ -33,6 +33,10 @@ jobs:
       - name: Build
         run: flutter build web --base-href /flutter_test_page/ --source-maps
 
+      # URLに "#" を付けないため、ページごとの index.html と 404.html を配置する
+      - name: Generate route pages
+        run: dart run tool/generate_route_pages.dart
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'

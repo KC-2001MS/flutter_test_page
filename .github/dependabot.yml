@@ -1,0 +1,12 @@
+# 依存パッケージ・GitHub Actions の更新と脆弱性を、Dependabot で毎週確認する
+version: 2
+updates:
+  - package-ecosystem: "pub"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

@@ -16525,8 +16525,7 @@ k=e}}l=f}m=h}}if(j){if(n)p=o
 else{j=s?q:b
 o=(j==null?p.a(j):j).b
 p=o}A.bU(p)
-a=new A.k(Math.max(A.hW(m),A.hW(k)),Math.max(A.hW(l),p))
-p=a
+p=new A.k(Math.max(A.hW(m),A.hW(k)),Math.max(A.hW(l),p))
 break A}p=d}return p},
 aYw(a,b,c,d,e,f,g,h,i){var s,r=null,q=A.al(),p=J.j4(new Array(4),t.iy)
 for(s=0;s<4;++s)p[s]=new A.tj(r,B.aC,B.C,new A.lH(1),r,r,r,r,B.br,r)
@@ -94328,7 +94327,7 @@ else o=p?"2160":"1920"
 else if(s<=3456)o=p?"3456":"1920"
 else o=p?"5120":"3840"
 m=t.p
-return new A.tq(this.c,B.J,A.aKY(q,A.td(B.e7,A.b([A.aDP("assets/images/\u51fa\u96f2\u5927\u793e"+o+".jpg",B.a9,new A.aaI(),B.pq,!0,n,n,n),A.fp(A.b([B.aIV,A.aJ0(A.td(B.e7,A.b([A.F2(new A.eY(B.bR,n,n,new A.XE(this.d,this.e,B.TL,n),n),n,B.bc),B.atl],m),B.aw,B.HD)),B.aIU],m),B.aL,B.a1,B.az,0,n)],m),B.aw,B.HD)),n)}}
+return new A.tq(this.c,B.J,A.aKY(q,A.td(B.e7,A.b([A.aDP("assets/images/\u51fa\u96f2\u5927\u793e"+o+".webp",B.a9,new A.aaI(),B.pq,!0,n,n,n),A.fp(A.b([B.aIV,A.aJ0(A.td(B.e7,A.b([A.F2(new A.eY(B.bR,n,n,new A.XE(this.d,this.e,B.TL,n),n),n,B.bc),B.atl],m),B.aw,B.HD)),B.aIU],m),B.aL,B.a1,B.az,0,n)],m),B.aw,B.HD)),n)}}
 A.aaI.prototype={
 $3(a,b,c){return B.P},
 $S:610}
@@ -107840,3 +107839,4 @@ return}var s=document.scripts
 function onLoad(b){for(var q=0;q<s.length;++q){s[q].removeEventListener("load",onLoad,false)}a(b.target)}for(var r=0;r<s.length;++r){s[r].addEventListener("load",onLoad,false)}})(function(a){v.currentScript=a
 var s=A.aBD
 if(typeof dartMainRunner==="function"){dartMainRunner(s,[])}else{s([])}})})()
+//# sourceMappingURL=main.dart.js.map

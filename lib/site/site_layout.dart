@@ -10,6 +10,12 @@ import 'language.dart';
 import 'links.dart';
 import 'site_theme.dart';
 
+/// スクロールバーのために右端に確保する幅（元サイトの html { scrollbar-gutter: stable; } に相当）
+///
+/// Flutterのスクロールバーは内容の上に重ねて描かれるため、確保しないと本文の文字に被る。
+/// デスクトップ・ウェブでのスクロールバーの太さ（マウスを乗せたときは12px）に合わせる。
+const scrollbarGutter = 12.0;
+
 /// 通常のページ（ヘッダー・本文・フッターを縦に並べ、ページ全体をスクロールする）
 class SitePage extends StatelessWidget {
   final String title;
@@ -32,7 +38,10 @@ class SitePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SiteHeader(color: colors.text),
+                  Padding(
+                    padding: const EdgeInsets.only(right: scrollbarGutter),
+                    child: SiteHeader(color: colors.text),
+                  ),
                   ConstrainedBox(
                     // main の min-height: calc(100vh - 195px)
                     constraints: BoxConstraints(
@@ -41,12 +50,19 @@ class SitePage extends StatelessWidget {
                     child: ColoredBox(
                       color: colors.main,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 5, bottom: 10),
+                        padding: const EdgeInsets.only(
+                          top: 5,
+                          bottom: 10,
+                          right: scrollbarGutter,
+                        ),
                         child: MainCard(child: child),
                       ),
                     ),
                   ),
-                  SiteFooter(color: colors.text),
+                  Padding(
+                    padding: const EdgeInsets.only(right: scrollbarGutter),
+                    child: SiteFooter(color: colors.text),
+                  ),
                 ],
               ),
             ),
@@ -66,20 +82,24 @@ class MainCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = SiteColors.of(context);
-    final width = MediaQuery.sizeOf(context).width;
 
     final content = DefaultTextStyle.merge(
       style: TextStyle(color: colors.text, fontSize: 16, height: 1.8),
       child: child,
     );
 
-    if (width >= 1200) {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: SizedBox(width: 1200, child: content),
-      );
-    }
-    return Padding(padding: const EdgeInsets.all(10), child: content);
+    // スクロールバーの幅を除いた、実際に使える幅で判定する
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 1200) {
+          return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(width: 1200, child: content),
+          );
+        }
+        return Padding(padding: const EdgeInsets.all(10), child: content);
+      },
+    );
   }
 }
 

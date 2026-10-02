@@ -29,6 +29,7 @@ Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・rema
 - ツイート・Bluesky の埋め込みは、埋め込み用スクリプトを読み込む前の引用（カード）として表示します。
 - GitHub Sponsors のボタンは iframe ではなく、同じ見た目のリンクです。
 - AVIF は Flutter で表示できないため、アプリのアイコンは PNG、トップの背景写真は WebP に変換して同梱しています。
+  アイコンの AVIF は HDR（PQ・Display P3）のため、基準白を 203 nit として SDR の sRGB に変換しています。
 - 価格は元サイトと同じくビルド時に取得します（`dart run tool/fetch_prices.dart`）。取得していない場合は「―」と表示します。
 
 ## Flutter Web で気づいたこと

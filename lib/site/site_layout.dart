@@ -10,11 +10,11 @@ import 'language.dart';
 import 'links.dart';
 import 'site_theme.dart';
 
-/// スクロールバーのために右端に確保する幅（元サイトの html { scrollbar-gutter: stable; } に相当）
+/// 本文の左右に最低限確保する余白
 ///
-/// Flutterのスクロールバーは内容の上に重ねて描かれるため、確保しないと本文の文字に被る。
-/// デスクトップ・ウェブでのスクロールバーの太さ（マウスを乗せたときは12px）に合わせる。
-const scrollbarGutter = 12.0;
+/// Flutterのスクロールバーは内容の上に重ねて描かれ、デスクトップ・ウェブではマウスを乗せると
+/// 12pxになる。元サイトの余白（10px）のままだと本文の文字に被るため、左右とも12pxにする。
+const minSideMargin = 12.0;
 
 /// 通常のページ（ヘッダー・本文・フッターを縦に並べ、ページ全体をスクロールする）
 class SitePage extends StatelessWidget {
@@ -38,10 +38,7 @@ class SitePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: scrollbarGutter),
-                    child: SiteHeader(color: colors.text),
-                  ),
+                  SiteHeader(color: colors.text),
                   ConstrainedBox(
                     // main の min-height: calc(100vh - 195px)
                     constraints: BoxConstraints(
@@ -50,19 +47,12 @@ class SitePage extends StatelessWidget {
                     child: ColoredBox(
                       color: colors.main,
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 5,
-                          bottom: 10,
-                          right: scrollbarGutter,
-                        ),
+                        padding: const EdgeInsets.only(top: 5, bottom: 10),
                         child: MainCard(child: child),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: scrollbarGutter),
-                    child: SiteFooter(color: colors.text),
-                  ),
+                  SiteFooter(color: colors.text),
                 ],
               ),
             ),
@@ -88,16 +78,23 @@ class MainCard extends StatelessWidget {
       child: child,
     );
 
-    // スクロールバーの幅を除いた、実際に使える幅で判定する
+    // 左右に余白を確保したうえで1200pxが収まる場合は、幅1200pxで中央に置く
+    // （左右の余白は常に同じにし、右側のスクロールバーにも被らないようにする）
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 1200) {
+        if (constraints.maxWidth >= 1200 + minSideMargin * 2) {
           return Align(
             alignment: Alignment.topCenter,
             child: SizedBox(width: 1200, child: content),
           );
         }
-        return Padding(padding: const EdgeInsets.all(10), child: content);
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: minSideMargin,
+            vertical: 10,
+          ),
+          child: content,
+        );
       },
     );
   }

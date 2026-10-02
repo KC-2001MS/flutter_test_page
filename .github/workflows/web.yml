@@ -26,6 +26,10 @@ jobs:
           flutter config --enable-web
           flutter pub get
 
+      # 元サイトと同じく、ビルド時にApp Storeの価格を取得する
+      - name: Fetch App Store prices
+        run: dart run tool/fetch_prices.dart
+
       - name: Build
         run: flutter build web --base-href /flutter_test_page/
 

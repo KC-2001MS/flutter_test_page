@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.8.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,10 +30,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_markdown:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  go_router: ^18.0.2
+  markdown: ^7.3.1
+  flutter_widget_from_html_core: ^0.17.4
+  url_launcher: ^6.3.2
+  flutter_svg: ^2.3.0
+  html: ^0.15.7
 
 dev_dependencies:
   flutter_test:
@@ -51,12 +56,34 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  uses-material-design: true
   assets:
+    # トップページ・404ページの背景
     - assets/images/出雲大社607P.jpg
     - assets/images/出雲大社1080.jpg
     - assets/images/出雲大社1080P.jpg
     - assets/images/出雲大社1440P.jpg
     - assets/images/出雲大社1920.jpg
+    - assets/images/出雲大社2160.jpg
     - assets/images/出雲大社3456.jpg
+    - assets/images/出雲大社3840.jpg
     - assets/images/出雲大社5120.jpg
-    - assets/markdown/contact.md
+    # アプリのアイコン・記事の画像
+    - assets/images/icons/
+    - assets/images/articles/
+    # App Storeのバッジ
+    - assets/images/Download-on-the-App-Store/JP/Download_on_App_Store/Black_lockup/SVG/
+    - assets/images/Download-on-the-App-Store/JP/Download_on_App_Store/White_lockup/SVG/
+    # 元サイトの content/ja
+    - assets/content/ja/
+    - assets/content/ja/blog/
+    - assets/content/ja/newsroom/
+    - assets/content/ja/product/
+    - assets/content/ja/tips/
+    - assets/content/ja/pages/
+
+  fonts:
+    # コードブロック用の等幅フォント（Flutter Web では端末のフォントを使えないため同梱する）
+    - family: RobotoMono
+      fonts:
+        - asset: assets/fonts/RobotoMono.ttf

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../widgets/measured_layouts.dart';
 import 'footer.dart';
 import 'header.dart';
+import 'language.dart';
 import 'links.dart';
 import 'site_theme.dart';
 
@@ -318,25 +319,31 @@ class _Goal extends StatelessWidget {
   }
 }
 
-/// 右下の言語切り替え
-///
-/// この検証用ページは日本語版のみのため、英語版は本番サイトへのリンクにしている。
+/// 右下の言語切り替え（日本語版から英語版、英語版から日本語版へ）
 class _LanguageSwitch extends StatelessWidget {
   const _LanguageSwitch();
 
   @override
   Widget build(BuildContext context) {
+    final language = SiteLanguage.of(context);
+    final other = language.isEnglish
+        ? SiteLanguage.japanese
+        : SiteLanguage.english;
+
     return _GlassBar(
       border: Border.fromBorderSide(_glassLine),
       borderRadius: BorderRadius.circular(10),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      child: const DefaultTextStyle(
-        style: TextStyle(color: defaultWhite, fontSize: 16),
+      child: DefaultTextStyle(
+        style: const TextStyle(color: defaultWhite, fontSize: 16),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('言語 : '),
-            SiteLink(href: 'https://iroiro.dev/en/', child: Text('English')),
+            Text(language.strings.languageLabel),
+            SiteLink(
+              href: other.path('/'),
+              child: Text(language.strings.otherLanguageName),
+            ),
           ],
         ),
       ),

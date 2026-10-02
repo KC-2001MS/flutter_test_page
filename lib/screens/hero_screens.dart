@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../site/language.dart';
 import '../site/site_layout.dart';
 
 /// トップページ
@@ -8,10 +9,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const HeroPage(
-      title: '【SwiftUIアプリ開発】いろいろポートフォリオ',
-      heading: 'より効率的に。',
-      subtitle: '私のほしいものを\n私自身の手で作り出します',
+    final strings = SiteLanguage.of(context).strings;
+    return HeroPage(
+      title: strings.homeTitle,
+      heading: strings.homeHeading,
+      subtitle: strings.homeSubtitle,
     );
   }
 }
@@ -22,10 +24,11 @@ class NotFoundScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const HeroPage(
-      title: 'このページは存在しない',
+    final strings = SiteLanguage.of(context).strings;
+    return HeroPage(
+      title: strings.notFoundTitle,
       heading: '404',
-      subtitle: 'このページは存在しません。\nこのページは作られていないようです。URLが正しいかどうかを確認してください。',
+      subtitle: strings.notFoundSubtitle,
     );
   }
 }

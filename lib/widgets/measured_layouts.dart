@@ -330,3 +330,110 @@ class RenderCellTable extends RenderBox
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
       defaultHitTestChildren(result, position: position);
 }
+
+/// 2つの子を左右に並べ、収まらない場合は2つ目の子を次の行の右端に送る
+///
+/// CSS の display: flex; flex-wrap: wrap; と、2つ目の子の margin-left: auto に相当する。
+class SpaceBetweenWrap extends MultiChildRenderObjectWidget {
+  /// 横に並べたときの最小の間隔
+  final double spacing;
+
+  /// 折り返したときの行の間隔
+  final double runSpacing;
+
+  SpaceBetweenWrap({
+    super.key,
+    required Widget leading,
+    required Widget trailing,
+    this.spacing = 0,
+    this.runSpacing = 0,
+  }) : super(children: [leading, trailing]);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      RenderSpaceBetweenWrap(spacing: spacing, runSpacing: runSpacing);
+
+  @override
+  void updateRenderObject(
+    BuildContext context,
+    RenderSpaceBetweenWrap renderObject,
+  ) {
+    renderObject
+      ..spacing = spacing
+      ..runSpacing = runSpacing;
+  }
+}
+
+class _WrapParentData extends ContainerBoxParentData<RenderBox> {}
+
+class RenderSpaceBetweenWrap extends RenderBox
+    with
+        ContainerRenderObjectMixin<RenderBox, _WrapParentData>,
+        RenderBoxContainerDefaultsMixin<RenderBox, _WrapParentData> {
+  RenderSpaceBetweenWrap({required double spacing, required double runSpacing})
+    : _spacing = spacing,
+      _runSpacing = runSpacing;
+
+  double _spacing;
+  set spacing(double value) {
+    if (value == _spacing) return;
+    _spacing = value;
+    markNeedsLayout();
+  }
+
+  double _runSpacing;
+  set runSpacing(double value) {
+    if (value == _runSpacing) return;
+    _runSpacing = value;
+    markNeedsLayout();
+  }
+
+  @override
+  void setupParentData(RenderBox child) {
+    if (child.parentData is! _WrapParentData) {
+      child.parentData = _WrapParentData();
+    }
+  }
+
+  @override
+  void performLayout() {
+    final width = constraints.maxWidth;
+    final leading = firstChild!;
+    final trailing = childAfter(leading)!;
+    final loose = BoxConstraints(maxWidth: width);
+    leading.layout(loose, parentUsesSize: true);
+    trailing.layout(loose, parentUsesSize: true);
+
+    final leadingData = leading.parentData! as _WrapParentData;
+    final trailingData = trailing.parentData! as _WrapParentData;
+    final fits = leading.size.width + _spacing + trailing.size.width <= width;
+
+    if (fits) {
+      // 1行に並べ、上下中央に揃える
+      final height = math.max(leading.size.height, trailing.size.height);
+      leadingData.offset = Offset(0, (height - leading.size.height) / 2);
+      trailingData.offset = Offset(
+        width - trailing.size.width,
+        (height - trailing.size.height) / 2,
+      );
+      size = constraints.constrain(Size(width, height));
+    } else {
+      // 2つ目の子を次の行の右端に置く
+      leadingData.offset = Offset.zero;
+      final top = leading.size.height + _runSpacing;
+      trailingData.offset = Offset(
+        math.max(0, width - trailing.size.width),
+        top,
+      );
+      size = constraints.constrain(Size(width, top + trailing.size.height));
+    }
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) =>
+      defaultPaint(context, offset);
+
+  @override
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>
+      defaultHitTestChildren(result, position: position);
+}

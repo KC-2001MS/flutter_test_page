@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:html/dom.dart' as dom;
 
+import '../site/language.dart';
 import '../site/links.dart';
 import '../site/site_theme.dart';
 import 'donation.dart';
@@ -247,7 +248,8 @@ class _CodeBlockState extends State<CodeBlock> {
     final code = widget.code.endsWith('\n')
         ? widget.code.substring(0, widget.code.length - 1)
         : widget.code;
-    final label = _copied ? 'コピーしました' : 'コードをコピー';
+    final strings = SiteLanguage.of(context).strings;
+    final label = _copied ? strings.copied : strings.copyCode;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16),

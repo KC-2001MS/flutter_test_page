@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:markdown/markdown.dart' as md;
 
-const _contentRoot = 'assets/content/ja';
+import '../site/language.dart';
+
+String _contentRoot(SiteLanguage language) => 'assets/content/${language.code}';
 
 /// フロントマター付きのMarkdown文書
 class MarkdownDocument {
@@ -32,7 +34,7 @@ class ArticleSummary {
   });
 }
 
-/// サイトのコンテンツ（元サイトの content/ja をアセットとして同梱したもの）を読み込む
+/// サイトのコンテンツ（元サイトの content/ja・content/en をアセットとして同梱したもの）を読み込む
 class ContentRepository {
   ContentRepository._();
 
@@ -44,12 +46,14 @@ class ContentRepository {
       _cache.putIfAbsent(key, load).then((value) => value as T);
 
   /// Markdown文書（例: "product/mywordx"、"contact"）。存在しない場合は null
-  Future<MarkdownDocument?> markdown(String name) =>
-      _cached('md:$name', () async {
+  Future<MarkdownDocument?> markdown(SiteLanguage language, String name) =>
+      _cached('md:${language.code}:$name', () async {
         if (!_isSafeName(name)) return null;
         final String source;
         try {
-          source = await rootBundle.loadString('$_contentRoot/$name.md');
+          source = await rootBundle.loadString(
+            '${_contentRoot(language)}/$name.md',
+          );
         } catch (_) {
           return null;
         }
@@ -61,61 +65,69 @@ class ContentRepository {
       });
 
   /// HTMLで書かれたページ（プライバシーポリシー・利用規約）
-  Future<String> htmlPage(String name) => _cached(
-    'html:$name',
-    () => rootBundle.loadString('$_contentRoot/pages/$name.html'),
+  Future<String> htmlPage(SiteLanguage language, String name) => _cached(
+    'html:${language.code}:$name',
+    () => rootBundle.loadString('${_contentRoot(language)}/pages/$name.html'),
   );
 
   /// ブログ・ニュースルームの一覧（ファイル名の順）
-  Future<List<ArticleSummary>> articles(String directory) =>
-      _cached('list:$directory', () async {
-        final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
-        final prefix = '$_contentRoot/$directory/';
-        final files =
-            manifest
-                .listAssets()
-                .where(
-                  (asset) => asset.startsWith(prefix) && asset.endsWith('.md'),
-                )
-                .toList()
-              ..sort();
+  Future<List<ArticleSummary>> articles(
+    SiteLanguage language,
+    String directory,
+  ) => _cached('list:${language.code}:$directory', () async {
+    final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+    final prefix = '${_contentRoot(language)}/$directory/';
+    final files =
+        manifest
+            .listAssets()
+            .where((asset) => asset.startsWith(prefix) && asset.endsWith('.md'))
+            .toList()
+          ..sort();
 
-        final list = <ArticleSummary>[];
-        for (final file in files) {
-          final slug = file.substring(prefix.length, file.length - 3);
-          final document = await markdown('$directory/$slug');
-          if (document == null) continue;
-          final data = document.frontMatter;
-          list.add(
-            ArticleSummary(
-              title: data['title'] ?? '',
-              description: data['description'] ?? '',
-              genre: data['genre'] ?? '',
-              date: data['date'] ?? '',
-              path: '/$directory/$slug',
-            ),
-          );
-        }
-        return list;
-      });
+    final list = <ArticleSummary>[];
+    for (final file in files) {
+      final slug = file.substring(prefix.length, file.length - 3);
+      final document = await markdown(language, '$directory/$slug');
+      if (document == null) continue;
+      final data = document.frontMatter;
+      list.add(
+        ArticleSummary(
+          title: data['title'] ?? '',
+          description: data['description'] ?? '',
+          genre: data['genre'] ?? '',
+          date: data['date'] ?? '',
+          path: language.path('/$directory/$slug'),
+        ),
+      );
+    }
+    return list;
+  });
 
   /// コンテンツページのデータ（product.json）
-  Future<Map<String, dynamic>> products() => _cached('products', () async {
-    final source = await rootBundle.loadString('$_contentRoot/product.json');
-    return jsonDecode(source) as Map<String, dynamic>;
-  });
+  Future<Map<String, dynamic>> products(SiteLanguage language) =>
+      _cached('products:${language.code}', () async {
+        final source = await rootBundle.loadString(
+          '${_contentRoot(language)}/product.json',
+        );
+        return jsonDecode(source) as Map<String, dynamic>;
+      });
 
   /// App Storeの価格（ビルド時に tool/fetch_prices.dart で取得したもの）
-  Future<Map<String, String>> prices() => _cached('prices', () async {
-    try {
-      final source = await rootBundle.loadString('$_contentRoot/prices.json');
-      return (jsonDecode(source) as Map<String, dynamic>).map(
-        (key, value) => MapEntry(key, value.toString()),
-      );
-    } catch (_) {
-      return <String, String>{};
-    }
-  });
+  ///
+  /// 元サイトと同じく、日本語版は日本、英語版はアメリカのApp Storeの価格。
+  Future<Map<String, String>> prices(SiteLanguage language) =>
+      _cached('prices:${language.code}', () async {
+        try {
+          final source = await rootBundle.loadString(
+            '${_contentRoot(language)}/prices.json',
+          );
+          return (jsonDecode(source) as Map<String, dynamic>).map(
+            (key, value) => MapEntry(key, value.toString()),
+          );
+        } catch (_) {
+          return <String, String>{};
+        }
+      });
 
   // "../" などで同梱していないファイルを読まないようにする
   static bool _isSafeName(String name) =>

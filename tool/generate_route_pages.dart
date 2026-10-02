@@ -2,33 +2,43 @@
 //
 // GitHub Pagesにはファイルが存在しないパスをindex.htmlに振り向ける設定がないため、
 // ビルド後の build/web に、ページごとの index.html と 404.html を配置する。
-// - 既知のページ（/product・/blog/xxx など）: 各ディレクトリに index.html を置き、200で返す
+// - 既知のページ（/product・/blog/xxx・/en/product など）: 各ディレクトリに index.html を置き、200で返す
 // - それ以外のパス: 404.html でアプリを起動し、アプリの404ページを表示する
 //
 // 使い方: flutter build web の後に dart run tool/generate_route_pages.dart
 import 'dart:io';
 
-const _content = 'assets/content/ja';
+const _content = 'assets/content';
 const _output = 'build/web';
 
 void main() {
   final index = File('$_output/index.html');
   if (!index.existsSync()) {
-    stderr.writeln('$_output/index.html がありません。先に flutter build web を実行してください。');
+    stderr.writeln(
+      '$_output/index.html がありません。先に flutter build web を実行してください。',
+    );
     exit(1);
   }
 
   final routes = <String>[
-    'product',
-    'blog',
-    'newsroom',
-    'contact',
-    'privacy',
-    'agreement',
-    ..._slugs('product').map((slug) => 'product/$slug'),
-    ..._slugs('tips').map((slug) => 'product/tips/$slug'),
-    ..._slugs('blog').map((slug) => 'blog/$slug'),
-    ..._slugs('newsroom').map((slug) => 'newsroom/$slug'),
+    // 英語版のトップ
+    'en',
+    for (final (language, prefix) in [('ja', ''), ('en', 'en/')]) ...[
+      for (final page in [
+        'product',
+        'blog',
+        'newsroom',
+        'contact',
+        'privacy',
+        'agreement',
+        '404',
+      ])
+        '$prefix$page',
+      ..._slugs(language, 'product').map((slug) => '${prefix}product/$slug'),
+      ..._slugs(language, 'tips').map((slug) => '${prefix}product/tips/$slug'),
+      ..._slugs(language, 'blog').map((slug) => '${prefix}blog/$slug'),
+      ..._slugs(language, 'newsroom').map((slug) => '${prefix}newsroom/$slug'),
+    ],
   ];
 
   for (final route in routes) {
@@ -40,9 +50,9 @@ void main() {
   stdout.writeln('${routes.length}ページ分の index.html と 404.html を配置しました');
 }
 
-/// `content/ja/<directory>` にあるMarkdownのファイル名（拡張子なし）
-List<String> _slugs(String directory) {
-  final dir = Directory('$_content/$directory');
+/// `content/<language>/<directory>` にあるMarkdownのファイル名（拡張子なし）
+List<String> _slugs(String language, String directory) {
+  final dir = Directory('$_content/$language/$directory');
   if (!dir.existsSync()) return const [];
   return dir
       .listSync()

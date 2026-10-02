@@ -5,7 +5,7 @@
 
 ## 再現している範囲
 
-元サイト（Next.js）の日本語版を対象にしています。
+元サイト（Next.js）の日本語版と英語版（`/en` 以下）を対象にしています。文面は元サイトと同じです。
 
 | ページ | パス | 内容の出どころ |
 | ---- | ---- | ---- |
@@ -19,18 +19,19 @@
 | プライバシーポリシー・利用規約 | `/privacy`・`/agreement` | `assets/content/ja/pages/*.html` |
 | 404 | 上記以外 | （固定の文言） |
 
-`assets/content/ja` は元サイトの `content/ja` をそのまま同梱したものです。
+`assets/content/ja`・`assets/content/en` は元サイトの `content/ja`・`content/en` をそのまま同梱したものです。
+プライバシーポリシー・利用規約は、元サイトの `page.tsx` を JSX の空白の規則どおりに HTML へ変換したものです。
 Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・remark-breaks 相当）、
 `flutter_widget_from_html_core` で元サイトの CSS に合わせたウィジェットとして表示します。
 
 ## 元サイトとの違い
 
-- 英語版はありません（トップの「English」は本番サイトの英語版へのリンクです）。
 - ツイート・Bluesky の埋め込みは、埋め込み用スクリプトを読み込む前の引用（カード）として表示します。
 - GitHub Sponsors のボタンは iframe ではなく、同じ見た目のリンクです。
 - AVIF は Flutter で表示できないため、アプリのアイコンは PNG、トップの背景写真は WebP に変換して同梱しています。
   アイコンの AVIF は HDR（PQ・Display P3）のため、基準白を 203 nit として SDR の sRGB に変換しています。
-- 価格は元サイトと同じくビルド時に取得します（`dart run tool/fetch_prices.dart`）。取得していない場合は「―」と表示します。
+- 価格は元サイトと同じくビルド時に取得します（`dart run tool/fetch_prices.dart`。日本語版は日本、英語版はアメリカの App Store）。取得していない場合は「―」と表示します。
+- 英語版のライトモードの App Store バッジは、元サイトでは画像のパスの誤りで表示されないため、正しい黒のバッジを表示しています。
 
 ## Flutter Web で気づいたこと
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'language.dart';
 import 'links.dart';
 
 /// サイト共通のフッター（著作権表示。問い合わせページへのリンク）
@@ -16,7 +17,7 @@ class SiteFooter extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12 * 1.67),
       child: Center(
         child: SiteLink(
-          href: '/contact',
+          href: SiteLanguage.of(context).path('/contact'),
           child: Text(
             '© 2024 Keisuke Chinone',
             style: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../site/language.dart';
 import '../site/links.dart';
 import '../site/site_theme.dart';
 import 'measured_layouts.dart';
@@ -35,6 +36,7 @@ class AppCard extends StatelessWidget {
     final appStoreId = id.startsWith('id') ? id : 'id$id';
     final appStoreUrl = 'https://apps.apple.com/app/$appStoreId';
     final title = app['title'] as String;
+    final strings = SiteLanguage.of(context).strings;
     final icon = (colors.isDark ? app['darkIcon'] : null) ?? app['icon'];
     final platforms = (app['supportedPlatforms'] as List).cast<Map>();
 
@@ -63,7 +65,7 @@ class AppCard extends StatelessWidget {
                         _iconAsset(icon),
                         width: 88,
                         height: 88,
-                        semanticLabel: '$titleアイコン',
+                        semanticLabel: strings.appIcon(title),
                       ),
                     ),
                   Expanded(
@@ -111,40 +113,26 @@ class AppCard extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(top: BorderSide(color: colors.mix(12))),
             ),
-            // 1行に収まらない場合は、リンクを左・価格とApp Storeのボタンを右に、2行で並べる
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final links = Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 20,
-                  children: [
-                    _TextLink(app['supportPage'] as String, 'サポートページ'),
-                    _TextLink(app['feedback'] as String, 'フィードバック'),
-                  ],
-                );
-                final actions = Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 12,
-                  children: [
-                    _PriceTag(prices[appStoreId.substring(2)]),
-                    _AppStoreBadge(url: appStoreUrl),
-                  ],
-                );
-                if (constraints.maxWidth >= 450) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [links, actions],
-                  );
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 12,
-                  children: [
-                    Align(alignment: Alignment.centerLeft, child: links),
-                    Align(alignment: Alignment.centerRight, child: actions),
-                  ],
-                );
-              },
+            // 1行に収まらない場合は、価格とApp Storeのボタンを次の行の右端に送る
+            child: SpaceBetweenWrap(
+              spacing: 20,
+              runSpacing: 12,
+              leading: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 20,
+                children: [
+                  _TextLink(app['supportPage'] as String, strings.supportPage),
+                  _TextLink(app['feedback'] as String, strings.feedback),
+                ],
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 12,
+                children: [
+                  _PriceTag(prices[appStoreId.substring(2)]),
+                  _AppStoreBadge(url: appStoreUrl),
+                ],
+              ),
             ),
           ),
         ],
@@ -245,15 +233,17 @@ class _PriceTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = SiteLanguage.of(context).strings;
     return Text.rich(
       TextSpan(
         children: [
-          const TextSpan(text: '価格：'),
+          TextSpan(text: strings.pricePrefix),
           TextSpan(
             text: price ?? '―',
             style: const TextStyle(color: priceColor),
           ),
-          const TextSpan(text: '（税込）'),
+          if (strings.priceSuffix.isNotEmpty)
+            TextSpan(text: strings.priceSuffix),
         ],
       ),
       style: const TextStyle(fontSize: 13),
@@ -269,18 +259,24 @@ class _AppStoreBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const base =
-        'assets/images/Download-on-the-App-Store/JP/Download_on_App_Store';
-    final asset = SiteColors.of(context).isDark
-        ? '$base/White_lockup/SVG/Download_on_the_App_Store_Badge_JP_RGB_wht_100317.svg'
-        : '$base/Black_lockup/SVG/Download_on_the_App_Store_Badge_JP_RGB_blk_100317.svg';
+    final language = SiteLanguage.of(context);
+    final dark = SiteColors.of(context).isDark;
+    // 日本語版は日本語のバッジ、英語版は英語（US-UK）のバッジ
+    final (region, name, version) = language.isEnglish
+        ? ('US', 'US-UK', '092917')
+        : ('JP', 'JP', '100317');
+    final lockup = dark ? 'White_lockup' : 'Black_lockup';
+    final color = dark ? 'wht' : 'blk';
+    final asset =
+        'assets/images/Download-on-the-App-Store/$region/Download_on_App_Store/'
+        '$lockup/SVG/Download_on_the_App_Store_Badge_${name}_RGB_${color}_$version.svg';
 
     return SiteLink(
       href: url,
       child: SvgPicture.asset(
         asset,
         height: 40,
-        semanticsLabel: 'App Storeからダウンロード',
+        semanticsLabel: language.strings.appStoreBadge,
       ),
     );
   }

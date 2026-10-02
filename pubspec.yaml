@@ -76,13 +76,21 @@ flutter:
     # App Storeのバッジ
     - assets/images/Download-on-the-App-Store/JP/Download_on_App_Store/Black_lockup/SVG/
     - assets/images/Download-on-the-App-Store/JP/Download_on_App_Store/White_lockup/SVG/
-    # 元サイトの content/ja
+    - assets/images/Download-on-the-App-Store/US/Download_on_App_Store/Black_lockup/SVG/
+    - assets/images/Download-on-the-App-Store/US/Download_on_App_Store/White_lockup/SVG/
+    # 元サイトの content/ja・content/en
     - assets/content/ja/
     - assets/content/ja/blog/
     - assets/content/ja/newsroom/
     - assets/content/ja/product/
     - assets/content/ja/tips/
     - assets/content/ja/pages/
+    - assets/content/en/
+    - assets/content/en/blog/
+    - assets/content/en/newsroom/
+    - assets/content/en/product/
+    - assets/content/en/tips/
+    - assets/content/en/pages/
 
   fonts:
     # コードブロック用の等幅フォント（Flutter Web では端末のフォントを使えないため同梱する）

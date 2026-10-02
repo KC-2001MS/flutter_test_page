@@ -9,7 +9,8 @@ Future<bool> openHref(BuildContext context, String href) async {
   // 脚注の戻りリンクなどページ内のアンカーは何もしない
   if (href.isEmpty || href.startsWith('#')) return true;
 
-  final internal = internalPath(href);
+  final current = GoRouter.of(context).state.uri;
+  final internal = internalPath(href, from: current);
   if (internal != null) {
     context.go(internal);
     return true;
@@ -21,8 +22,13 @@ Future<bool> openHref(BuildContext context, String href) async {
 }
 
 /// サイト内のパスであれば、ルーターで扱えるパスに変換する
-String? internalPath(String href) {
-  if (href.startsWith('./')) href = href.substring(1);
+///
+/// "./product/xxx" のような相対パスは、ブラウザと同じく現在のページ [from] を基準にする
+/// （英語版の /en/product からは /en/product/xxx になる）。
+String? internalPath(String href, {Uri? from}) {
+  if (href.startsWith('./')) {
+    href = (from ?? Uri.parse('/')).resolve(href).path;
+  }
   if (!href.startsWith('/') || href.startsWith('//')) return null;
   // "/privacy.html" のような旧URLにも対応する
   return href.replaceFirst(RegExp(r'\.html$'), '');

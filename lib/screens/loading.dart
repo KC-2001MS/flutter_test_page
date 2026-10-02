@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../site/language.dart';
+
 /// コンテンツの読み込み中・読み込み失敗の表示
 class LoadingContent extends StatelessWidget {
   final Object? error;
@@ -16,7 +18,7 @@ class LoadingContent extends StatelessWidget {
                 dimension: 24,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : const Text('コンテンツを読み込めませんでした。'),
+            : Text(SiteLanguage.of(context).strings.loadFailed),
       ),
     );
   }

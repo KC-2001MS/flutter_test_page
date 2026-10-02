@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -107,6 +107,14 @@
     <h1>いろいろポートフォリオ</h1>
     <p>読み込み中…</p>
   </div>
+  <script>
+    // 英語版のページでは、読み込み中の表示も英語にする
+    if (/^\/en(\/|$)/.test(location.pathname.slice(new URL(document.baseURI).pathname.length - 1))) {
+      document.documentElement.lang = "en";
+      document.querySelector("#loading h1").textContent = "Iroiro's portfolio";
+      document.querySelector("#loading p").textContent = "Loading…";
+    }
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

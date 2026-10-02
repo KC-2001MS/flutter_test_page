@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../site/language.dart';
 import '../site/links.dart';
 import '../site/site_theme.dart';
 import 'headings.dart';
@@ -11,6 +12,7 @@ class DonationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = SiteTypography.of(context).h3;
+    final strings = SiteLanguage.of(context).strings;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -19,7 +21,7 @@ class DonationSection extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: size * 1.5, bottom: size * 0.5),
           child: Text(
-            '寄付',
+            strings.donationTitle,
             style: TextStyle(
               fontSize: size,
               fontWeight: FontWeight.bold,
@@ -27,9 +29,7 @@ class DonationSection extends StatelessWidget {
             ),
           ),
         ),
-        const Text(
-          '寄付をご希望の方は、こちらをクリックしてください。ご寄付いただいたお金は、私のプログラミング・スキルの向上とアプリケーションのメンテナンスに使わせていただきます。',
-        ),
+        Text(strings.donationBody),
         const DonationButtons(),
       ],
     );

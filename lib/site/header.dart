@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'language.dart';
 import 'links.dart';
 import 'site_theme.dart';
 
@@ -11,13 +12,24 @@ class _TabItem {
   const _TabItem(this.label, this.path, this.icon);
 }
 
-const _tabs = [
-  _TabItem('ホーム', '/', Icons.home_outlined),
-  _TabItem('コンテンツ', '/product', Icons.apps_outlined),
-  _TabItem('ブログ', '/blog', Icons.article_outlined),
-  _TabItem('ニュースルーム', '/newsroom', Icons.newspaper_outlined),
-  _TabItem('問い合わせ', '/contact', Icons.contact_page_outlined),
-];
+List<_TabItem> _tabs(SiteLanguage language) {
+  final strings = language.strings;
+  return [
+    _TabItem(strings.home, language.path('/'), Icons.home_outlined),
+    _TabItem(strings.contents, language.path('/product'), Icons.apps_outlined),
+    _TabItem(strings.blog, language.path('/blog'), Icons.article_outlined),
+    _TabItem(
+      strings.newsroom,
+      language.path('/newsroom'),
+      Icons.newspaper_outlined,
+    ),
+    _TabItem(
+      strings.contact,
+      language.path('/contact'),
+      Icons.contact_page_outlined,
+    ),
+  ];
+}
 
 /// サイト共通のヘッダー（サイト名とタブ）
 ///
@@ -35,6 +47,7 @@ class SiteHeader extends StatelessWidget {
     final landscape = size.width >= 540 && size.width > size.height;
     final typography = SiteTypography.of(context);
     final titleSize = typography.h1;
+    final language = SiteLanguage.of(context);
 
     return DefaultTextStyle.merge(
       style: TextStyle(color: color, fontSize: 16, shadows: shadows),
@@ -43,9 +56,9 @@ class SiteHeader extends StatelessWidget {
           // h1 の上下の余白（0.67em）
           SizedBox(height: titleSize * 0.67),
           SiteLink(
-            href: '/',
+            href: language.path('/'),
             child: Text(
-              'いろいろポートフォリオ',
+              language.strings.siteName,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: titleSize,
@@ -57,7 +70,7 @@ class SiteHeader extends StatelessWidget {
           Wrap(
             alignment: WrapAlignment.center,
             children: [
-              for (final tab in _tabs)
+              for (final tab in _tabs(language))
                 landscape
                     ? _TextTab(item: tab, color: color)
                     : _IconTab(item: tab, color: color),

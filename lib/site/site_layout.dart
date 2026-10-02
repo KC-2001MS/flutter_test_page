@@ -187,7 +187,7 @@ class HeroPage extends StatelessWidget {
     } else {
       name = retina ? '5120' : '3840';
     }
-    return 'assets/images/出雲大社$name.jpg';
+    return 'assets/images/出雲大社$name.webp';
   }
 }
 

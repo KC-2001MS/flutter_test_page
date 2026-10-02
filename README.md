@@ -28,7 +28,7 @@ Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・rema
 - 英語版はありません（トップの「English」は本番サイトの英語版へのリンクです）。
 - ツイート・Bluesky の埋め込みは、埋め込み用スクリプトを読み込む前の引用（カード）として表示します。
 - GitHub Sponsors のボタンは iframe ではなく、同じ見た目のリンクです。
-- アプリのアイコンは AVIF を Flutter で表示できないため、PNG に変換して同梱しています。
+- AVIF は Flutter で表示できないため、アプリのアイコンは PNG、トップの背景写真は WebP に変換して同梱しています。
 - 価格は元サイトと同じくビルド時に取得します（`dart run tool/fetch_prices.dart`）。取得していない場合は「―」と表示します。
 
 ## Flutter Web で気づいたこと
@@ -37,6 +37,9 @@ Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・rema
   `IntrinsicWidth`・`IntrinsicHeight`・`IntrinsicColumnWidth` を使うと折り返しや高さがずれました。
   そのため、子を実際にレイアウトして大きさを揃える RenderObject（`lib/widgets/measured_layouts.dart`）を使っています。
 - 端末のフォントを使えないため、コードブロック用の等幅フォント（Roboto Mono、SIL Open Font License）を同梱しています。
+- 画面全体を canvas に描くため、Lighthouse では LCP を測定できません（NO_LCP）。
+  起動までの間は `web/index.html` の読み込み中の表示（HTML）を出し、起動後に `web/flutter_bootstrap.js` で消しています。
+- Flutter の Service Worker は非推奨のため、`web/flutter_bootstrap.js` で登録しないようにしています。
 
 ## 開発
 

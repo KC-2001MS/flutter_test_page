@@ -59,15 +59,15 @@ flutter:
   uses-material-design: true
   assets:
     # トップページ・404ページの背景
-    - assets/images/出雲大社607P.jpg
-    - assets/images/出雲大社1080.jpg
-    - assets/images/出雲大社1080P.jpg
-    - assets/images/出雲大社1440P.jpg
-    - assets/images/出雲大社1920.jpg
-    - assets/images/出雲大社2160.jpg
-    - assets/images/出雲大社3456.jpg
-    - assets/images/出雲大社3840.jpg
-    - assets/images/出雲大社5120.jpg
+    - assets/images/出雲大社607P.webp
+    - assets/images/出雲大社1080.webp
+    - assets/images/出雲大社1080P.webp
+    - assets/images/出雲大社1440P.webp
+    - assets/images/出雲大社1920.webp
+    - assets/images/出雲大社2160.webp
+    - assets/images/出雲大社3456.webp
+    - assets/images/出雲大社3840.webp
+    - assets/images/出雲大社5120.webp
     # アプリのアイコン・記事の画像
     - assets/images/icons/
     - assets/images/articles/

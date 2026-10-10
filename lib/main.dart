@@ -9,7 +9,7 @@ import 'site/language.dart';
 import 'site/site_theme.dart';
 
 void main() {
-  // URLに "#" を付けない（/flutter_test_page/product の形にする）
+  // URLに "#" を付けない（/flutter-test-page/product の形にする）
   usePathUrlStrategy();
   runApp(const MyApp());
 }

@@ -1,4 +1,4 @@
-# flutter_test_page
+# flutter-test-page
 
 [いろいろポートフォリオ（iroiro.dev）](https://iroiro.dev)を、Flutter Web でどこまで再現できるかを試す検証用のページです。
 本番サイトを置き換える予定はありません。
@@ -44,7 +44,7 @@ Markdown は `markdown` パッケージで HTML に変換し（remark-gfm・rema
 - Flutter の Service Worker は非推奨のため、`web/flutter_bootstrap.js` で登録しないようにしています。
 - URL は `#` の付かないパス形式（`usePathUrlStrategy()`）です。GitHub Pages には存在しないパスを index.html に振り向ける設定がないため、
   ビルド後に `tool/generate_route_pages.dart` でページごとの `index.html` と `404.html` を配置しています。
-  以前の `#/product` 形式の URL は、`web/index.html` で `/flutter_test_page/product` に置き換えます。
+  以前の `#/product` 形式の URL は、`web/index.html` で `/flutter-test-page/product` に置き換えます。
 
 ## 開発
 
@@ -55,7 +55,7 @@ flutter test
 
 # 公開用のビルド（GitHub Actions と同じ手順）
 dart run tool/fetch_prices.dart
-flutter build web --base-href /flutter_test_page/ --source-maps
+flutter build web --base-href /flutter-test-page/ --source-maps
 dart run tool/generate_route_pages.dart
 ```
 

@@ -58,3 +58,10 @@ dart run tool/fetch_prices.dart
 flutter build web --base-href /flutter_test_page/ --source-maps
 dart run tool/generate_route_pages.dart
 ```
+
+## 依存パッケージの更新
+
+Dependabot（`.github/dependabot.yml`）が、依存パッケージと GitHub Actions の更新を毎週確認し、種類ごとに1つの PR にまとめます。
+新しい更新が出ると既存の PR は閉じられ、最新の内容で作り直されます。
+パッチ・マイナーバージョンの更新は、解析・テスト・ビルドがすべて成功すると自動でマージされ、そのままデプロイされます（`.github/workflows/web.yml` の `automerge`）。
+メジャーバージョンの更新は互換性のない変更を含むことがあるため、自動ではマージしません。

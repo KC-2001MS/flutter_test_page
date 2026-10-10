@@ -1,12 +1,24 @@
 # 依存パッケージ・GitHub Actions の更新と脆弱性を、Dependabot で毎週確認する
+#
+# 更新は種類ごとに1つのPRにまとめる。新しい更新が出ると、Dependabotが既存のPRを
+# 閉じて最新の内容で作り直すため、古いPRが溜まらない。
+# 解析・テスト・ビルドが成功したPRは、.github/workflows/web.yml で自動マージする。
 version: 2
 updates:
   - package-ecosystem: "pub"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      pub:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

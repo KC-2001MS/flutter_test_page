@@ -21,8 +21,9 @@ jobs:
       - name: Setup Flutter
         run: |
           # 最新の安定版（stable）のFlutterを使う
-          git clone https://github.com/flutter/flutter.git --depth 1 -b stable _flutter
-          echo "${GITHUB_WORKSPACE}/_flutter/bin" >> ${GITHUB_PATH}
+          # リポジトリの中に置くと flutter analyze がSDK本体まで解析するため、外に置く
+          git clone https://github.com/flutter/flutter.git --depth 1 -b stable "${RUNNER_TEMP}/flutter"
+          echo "${RUNNER_TEMP}/flutter/bin" >> "${GITHUB_PATH}"
 
       - name: Install
         run: |

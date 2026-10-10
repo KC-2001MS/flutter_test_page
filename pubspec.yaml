@@ -37,7 +37,7 @@ dependencies:
   go_router: ^18.0.2
   markdown: ^7.3.1
   flutter_widget_from_html_core: ^0.17.4
-  url_launcher: ^6.3.2
+  url_launcher: ^6.3.3
   flutter_svg: ^2.3.0
   html: ^0.15.7
 
